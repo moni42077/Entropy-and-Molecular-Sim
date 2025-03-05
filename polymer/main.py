@@ -1,30 +1,28 @@
-import pygame as pg 
+import numpy as np
+from scipy import constants
+import sympy as sp
 
-def generate_chain(N,b):
-    
+def e_a(theta):
+    return -k * (theta-theta0)**2 / 2
+
+theta0 = np.deg2rad(112)
+k = 65
+T = 300
+beta= sp.Symbol('b') #1 / (constants.Boltzmann * T)
+nom = 0.
+denom = 0.
+
+for theta in np.linspace(0.1,2*np.pi,100):
+    nom += -e_a(theta) * sp.exp(-beta * e_a(theta))
+    denom += sp.exp(-beta * e_a(theta))
+
+z = nom/denom
+z_val =  z.subs(beta, 1/(constants.Boltzmann * T))
 
 
-BLACK = (0, 0, 0)
-ORANGE = (237, 85, 59)
-BLUE = (6, 133, 135)
+e =  1/ z_val * sp.diff(z,beta)
+e_val = e.subs(beta, 1/(constants.Boltzmann * T))
 
-
-pg.init()
-X = 800
-Y = 800
-N = 10
-SCREEN = pg.display.set_mode((X, Y))
-CLOCK = pg.time.Clock()
-SCREEN.fill(BLACK)
-
-
-while True:
-    SCREEN.fill(BLUE)
-    for event in pg.event.get():
-        if event.type == pg.QUIT:
-            pg.quit()
-            quit()
-
-    pg.display.update()
-    CLOCK.tick(60)
-
+print(z_val)
+print(e_val)
+print(-constants.Boltzmann * T * np.log(z_val))

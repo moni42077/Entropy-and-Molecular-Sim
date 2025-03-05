@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 # Parameters
 N = 10       # Number of monomers in the chain
 b = 1         # Length of each bond
-num_steps = 100  # Number of chains to generate (for averaging)
+num_steps = 1000  # Number of chains to generate (for averaging)
 
 # Initialize variables to store results
 end_to_end_distances = []
@@ -49,3 +49,13 @@ directions /= np.linalg.norm(directions, axis=1)[:, np.newaxis]
 
 for i in range(1, N):
     example_chain[i] = example_chain[i - 1] + b * directions[i]
+
+# Plot the ideal chain
+fig = plt.figure(figsize=(10, 6))
+ax = fig.add_subplot(111, projection='3d')
+ax.plot(example_chain[:, 0], example_chain[:, 1], example_chain[:, 2], marker='o', markersize=3)
+ax.set_title("Ideal Chain Simulation")
+ax.set_xlabel("X")
+ax.set_ylabel("Y")
+ax.set_zlabel("Z")
+plt.show()
